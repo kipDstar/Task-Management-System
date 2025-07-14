@@ -14,8 +14,8 @@ class TaskManager {
         this.sortBy = 'created_desc';
         this.currentUser = null;
         this.sessionToken = null;
-        this.eventSource = null;
-        this.realtimeEnabled = true;
+        
+        
         
         this.init();
     }
