@@ -1,0 +1,33 @@
+RewriteEngine On
+
+# Handle API routing
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/auth/(.*)$ api/auth_endpoints.php?action=$1 [QSA,L]
+
+# Security headers
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
+
+# Prevent access to sensitive files
+<Files "*.db">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "config.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Enable CORS for API endpoints
+<IfModule mod_headers.c>
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
+
+# Handle preflight OPTIONS requests
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
